@@ -6,6 +6,7 @@ import { Card, CardContent } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Button } from "../components/ui/button";
+import { cn } from "../lib/utils";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -19,23 +20,23 @@ export default function Login() {
 
     try {
       await login(email, password);
-      alert("Login successful ✅");
-      navigate("/home"); // redirect after login
+      navigate("/home");
     } catch (err: any) {
       alert(err?.response?.data?.message || "Login failed ❌");
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black text-white">
-      <Card className="w-[400px] p-6">
+    <div className={cn("min-h-screen flex items-center justify-center bg-black text-white")}>
+      <Card className={cn("w-[400px] p-6 bg-neutral-900 border border-neutral-800")}>
         <CardContent>
           <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <Label>Email</Label>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
               <Input
+                id="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -43,9 +44,10 @@ export default function Login() {
               />
             </div>
 
-            <div>
-              <Label>Password</Label>
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
               <Input
+                id="password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
