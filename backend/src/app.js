@@ -8,11 +8,28 @@ const interviewRoutes = require("../routes/interview.routes");
 const app = express();
 
 /**
- * ✅ CORS (must be first)
+ * ✅ Allowed origins for CORS
+ */
+const allowedOrigins = [
+  "http://localhost:5173",          // local frontend
+  process.env.FRONTEND_URL         // deployed frontend (Vercel)
+];
+
+/**
+ * ✅ CORS (must be first middleware)
  */
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: function (origin, callback) {
+      // allow requests with no origin (like Postman)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
@@ -29,7 +46,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 /**
- * ✅ Test route
+ * ✅ Health/Test route
  */
 app.get("/", (req, res) => {
   res.send("Server is running 🚀");
