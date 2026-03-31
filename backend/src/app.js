@@ -11,9 +11,9 @@ const app = express();
  * ✅ Allowed origins for CORS
  */
 const allowedOrigins = [
-  "http://localhost:5173",          // local frontend
-  process.env.FRONTEND_URL         // deployed frontend (Vercel)
-];
+  "http://localhost:5173",                 // local frontend
+  process.env.FRONTEND_URL                // Vercel frontend
+].filter(Boolean);                        // removes undefined
 
 /**
  * ✅ CORS (must be first middleware)
@@ -21,14 +21,14 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: function (origin, callback) {
-      // allow requests with no origin (like Postman)
+      // Allow Postman / server-to-server requests (no origin)
       if (!origin) return callback(null, true);
 
-      if (allowedOrigins.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
       }
+
+      return callback(new Error("Not allowed by CORS: " + origin));
     },
     credentials: true,
   })
@@ -46,7 +46,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 /**
- * ✅ Health/Test route
+ * ✅ Health route
  */
 app.get("/", (req, res) => {
   res.send("Server is running 🚀");

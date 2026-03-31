@@ -6,29 +6,28 @@ import { Card, CardContent } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Button } from "../components/ui/button";
-import { cn } from "../lib/utils";
 
 export default function Login() {
   const navigate = useNavigate();
   const { login, loading } = useAuthStore();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
       await login(email, password);
       navigate("/home");
     } catch (err: any) {
-      alert(err?.response?.data?.message || "Login failed ❌");
+      alert(err?.response?.data?.message || "Login failed");
     }
   };
 
   return (
-    <div className={cn("min-h-screen flex items-center justify-center bg-black text-white")}>
-      <Card className={cn("w-[400px] p-6 bg-neutral-900 border border-neutral-800")}>
+    <div className="min-h-screen flex items-center justify-center bg-black text-white">
+      <Card className="w-[400px] p-6 bg-neutral-900 border border-neutral-800">
         <CardContent>
           <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
 

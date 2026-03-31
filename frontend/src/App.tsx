@@ -1,26 +1,31 @@
 import { useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
+// Pages
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
 import Interview from "./pages/Interview";
+
+// Components
 import ProtectedRoute from "./components/ProtectedRoute";
+
+// Zustand store
 import { useAuthStore } from "./store/authStore";
 
 function App() {
   const getCurrentUser = useAuthStore((state) => state.getCurrentUser);
   const loading = useAuthStore((state) => state.loading);
 
-  // ✅ VERY IMPORTANT — runs once when app starts
+  // ✅ Runs once when app starts to check if user is logged in
   useEffect(() => {
     getCurrentUser();
   }, [getCurrentUser]);
 
-  // Optional loading screen while checking cookie
+  // Optional loading screen while checking authentication
   if (loading) {
     return (
-      <div className="h-screen flex items-center justify-center text-xl">
+      <div className="h-screen flex items-center justify-center text-xl text-white bg-neutral-950">
         Checking authentication...
       </div>
     );
@@ -42,7 +47,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/interview"
           element={
@@ -52,8 +56,8 @@ function App() {
           }
         />
 
-        {/* Default redirect */}
-        <Route path="*" element={<Navigate to="/login" />} />
+        {/* Default redirect for unknown routes */}
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>
   );

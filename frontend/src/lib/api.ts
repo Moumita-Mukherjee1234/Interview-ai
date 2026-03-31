@@ -1,7 +1,9 @@
+// frontend/src/lib/api.ts
 import axios from "axios";
 
-export const api = axios.create({
-  baseURL: "https://interview-ai-backend-v49f.onrender.com/",
-  withCredentials: true, // ⭐ THIS sends & receives cookies
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL, // ✅ reads .env variable
+  withCredentials: true, // send & receive cookies
 });
+
 export default api;

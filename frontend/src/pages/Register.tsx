@@ -15,15 +15,15 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
       await register(username, email, password);
       alert("Registered successfully ✅");
-      navigate("/home"); // redirect after register
-    } catch (error: any) {
-      alert(error?.response?.data?.message || "Registration failed ❌");
+      navigate("/home");
+    } catch (error: unknown) {
+      alert("Registration failed ❌");
     }
   };
 
@@ -35,8 +35,9 @@ export default function Register() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <Label>Username</Label>
+              <Label htmlFor="username">Username</Label>
               <Input
+                id="username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
@@ -44,8 +45,9 @@ export default function Register() {
             </div>
 
             <div>
-              <Label>Email</Label>
+              <Label htmlFor="email">Email</Label>
               <Input
+                id="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -54,8 +56,9 @@ export default function Register() {
             </div>
 
             <div>
-              <Label>Password</Label>
+              <Label htmlFor="password">Password</Label>
               <Input
+                id="password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}

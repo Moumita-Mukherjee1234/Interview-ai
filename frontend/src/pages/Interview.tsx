@@ -7,6 +7,8 @@ export default function Interview() {
   const { report } = useInterview();
 
   const handleDownloadResume = async () => {
+    if (!report) return;
+
     try {
       const res = await api.post(
         "/interview/resume",
@@ -17,7 +19,7 @@ export default function Interview() {
       const url = window.URL.createObjectURL(new Blob([res.data]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", "AI_Resume.pdf");
+      link.download = "AI_Resume.pdf";
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -36,8 +38,7 @@ export default function Interview() {
 
   return (
     <div className="min-h-screen bg-neutral-950 text-white p-8 space-y-8">
-      
-      {/* 🔝 Top Header + Button (Correct placement) */}
+      {/* Header */}
       <div className="flex items-center justify-between">
         <h1 className="text-4xl font-bold">Interview Report</h1>
         <Button onClick={handleDownloadResume}>
@@ -52,7 +53,7 @@ export default function Interview() {
         </CardHeader>
         <CardContent>
           <p className="text-5xl font-bold text-green-400">
-            {report.matchScore}%
+            {report.matchScore ?? 0}%
           </p>
         </CardContent>
       </Card>
@@ -64,7 +65,7 @@ export default function Interview() {
         </CardHeader>
         <CardContent>
           <ul className="list-disc ml-6 space-y-2">
-            {report.technicalQuestions.map((q: string, i: number) => (
+            {(report.technicalQuestions ?? []).map((q, i) => (
               <li key={i}>{q}</li>
             ))}
           </ul>
@@ -78,7 +79,7 @@ export default function Interview() {
         </CardHeader>
         <CardContent>
           <ul className="list-disc ml-6 space-y-2">
-            {report.behavioralQuestions.map((q: string, i: number) => (
+            {(report.behavioralQuestions ?? []).map((q, i) => (
               <li key={i}>{q}</li>
             ))}
           </ul>
@@ -92,7 +93,7 @@ export default function Interview() {
         </CardHeader>
         <CardContent>
           <ul className="list-disc ml-6 space-y-2">
-            {report.skillGaps.map((s: string, i: number) => (
+            {(report.skillGaps ?? []).map((s, i) => (
               <li key={i}>{s}</li>
             ))}
           </ul>
@@ -106,13 +107,12 @@ export default function Interview() {
         </CardHeader>
         <CardContent>
           <ul className="list-disc ml-6 space-y-2">
-            {report.preparationPlan.map((p: string, i: number) => (
+            {(report.preparationPlan ?? []).map((p, i) => (
               <li key={i}>{p}</li>
             ))}
           </ul>
         </CardContent>
       </Card>
-
     </div>
   );
 }

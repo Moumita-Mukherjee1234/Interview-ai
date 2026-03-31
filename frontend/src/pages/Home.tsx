@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import {api} from "../lib/api";
+import api from "../lib/api"; // ✅ default import
 
 import { useInterview } from "../context/InterviewContext";
 import { useNavigate } from "react-router-dom";
@@ -21,7 +21,7 @@ export default function Home() {
   // ✅ Fetch previous reports when page loads
   useEffect(() => {
     fetchHistory();
-  }, []);
+  }, [fetchHistory]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,7 +57,7 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col items-center bg-black text-white p-8 space-y-12">
       {/* 🔷 Generate Interview Form */}
-      <Card className="w-[600px] p-6">
+      <Card className="w-full max-w-[600px] p-6">
         <CardHeader>
           <CardTitle className="text-2xl">Generate Interview Plan</CardTitle>
         </CardHeader>
@@ -106,7 +106,7 @@ export default function Home() {
       </Card>
 
       {/* 🔶 Previous Reports Section */}
-      <div className="w-[600px] space-y-4">
+      <div className="w-full max-w-[600px] space-y-4">
         <h2 className="text-3xl font-bold">Previous Reports</h2>
 
         {history.length === 0 && (

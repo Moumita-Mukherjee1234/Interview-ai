@@ -4,14 +4,17 @@ const User = require("../models/User.model");
 const BlacklistToken = require("../models/BlacklistToken.model");
 
 /**
- * Helper to set auth cookie correctly for localhost
+ * Helper to set auth cookie correctly
+ * Works both locally and in production (Vercel + Render)
  */
 const setAuthCookie = (res, token) => {
+  const isProduction = process.env.NODE_ENV === "production";
+
   res.cookie("token", token, {
     httpOnly: true,
-    secure: false,     // localhost
-    sameSite: "lax",   // cross-port localhost fix
-    maxAge: 7 * 24 * 60 * 60 * 1000,
+    secure: isProduction,         // true on HTTPS in production
+    sameSite: isProduction ? "none" : "lax", // cross-site in prod
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
   });
 };
 
@@ -73,7 +76,6 @@ const loginUser = async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    // ✅ FIXED: token payload must be userId
     const token = jwt.sign(
       { userId: user._id },
       process.env.JWT_SECRET,
@@ -106,10 +108,12 @@ const logoutUser = async (req, res) => {
       await BlacklistToken.create({ token });
     }
 
+    const isProduction = process.env.NODE_ENV === "production";
+
     res.clearCookie("token", {
       httpOnly: true,
-      sameSite: "lax",
-      secure: false,
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "lax",
     });
 
     return res.status(200).json({
