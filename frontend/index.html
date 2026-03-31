@@ -2,12 +2,45 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Responsive -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Interview AI</title>
+
+    <!-- SEO -->
+    <meta
+      name="description"
+      content="Interview AI – Generate personalized interview preparation reports using AI. Upload your resume, add job description, and get instant insights."
+    />
+    <meta name="theme-color" content="#4f46e5" />
+
+    <!-- Fonts (clean SaaS look) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <title>Interview AI | Smart Interview Preparation</title>
+
+    <style>
+      /* Prevent flash of unstyled content */
+      html, body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(to bottom right, #eef2ff, #f8fafc);
+      }
+    </style>
   </head>
+
   <body>
     <div id="root"></div>
-    <script type="module" src="src/Main.tsx"></script>
+
+    <!-- React Entry -->
+    <script type="module" src="/src/Main.tsx"></script>
   </body>
 </html>

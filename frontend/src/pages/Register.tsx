@@ -28,51 +28,67 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black text-white">
-      <Card className="w-[400px] p-6">
-        <CardContent>
-          <h2 className="text-2xl font-bold mb-6 text-center">Register</h2>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 via-white to-slate-200 px-4">
+      <Card className="w-full max-w-md shadow-2xl rounded-2xl border">
+        <CardContent className="p-8">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold tracking-tight">
+              Interview AI ✨
+            </h1>
+            <p className="text-sm text-muted-foreground mt-2">
+              Create your account to start interview preparation
+            </p>
+          </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div className="space-y-2">
               <Label htmlFor="username">Username</Label>
               <Input
                 id="username"
+                placeholder="Enter your name"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
               />
             </div>
 
-            <div>
+            <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 type="email"
+                placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
             </div>
 
-            <div>
+            <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
                 type="password"
+                placeholder="Create a password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
             </div>
 
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Registering..." : "Register"}
+            <Button
+              type="submit"
+              className="w-full mt-2 text-base py-2"
+              disabled={loading}
+            >
+              {loading ? "Registering..." : "Create Account"}
             </Button>
 
-            <p className="text-sm mt-4 text-center">
+            <p className="text-sm text-center mt-6 text-muted-foreground">
               Already have an account?{" "}
-              <Link to="/login" className="text-blue-400 underline">
+              <Link to="/login" className="font-medium underline">
                 Login
               </Link>
             </p>

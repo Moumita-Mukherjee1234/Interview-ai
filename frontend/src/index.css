@@ -1,97 +1,161 @@
 @import "tailwindcss";
 
-/* ================= FONT ================= */
+/* ------------------ COLOR PALETTE ------------------ */
 :root {
-  --font-sans: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
-  --radius: 1rem;
+  --white-soft: #FEFEFE;
+  --indigo-deep: #282072;
+  --teal: #03B3C5;
+  --coral-red: #F32A46;
+  --mustard: #F1B62C;
+  --beige: #E0CFA8;
+
+  --text-dark: #1a1a1a;
+  --text-soft: #6b7280;
+  --border-color: #e5e7eb;
 }
 
-/* ================= LIGHT THEME (SaaS Look) ================= */
-:root {
-  --background: oklch(0.98 0.01 260);
-  --foreground: oklch(0.25 0.02 260);
-
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.25 0.02 260);
-
-  --primary: oklch(0.55 0.18 275);            /* Indigo/Violet */
-  --primary-foreground: oklch(0.98 0.01 260);
-
-  --border: oklch(0.92 0.01 260);
-  --input: oklch(0.94 0.01 260);
-  --ring: oklch(0.70 0.10 275);
+/* ------------------ GLOBAL RESET ------------------ */
+* {
+  box-sizing: border-box;
 }
 
-/* ================= DARK THEME ================= */
-.dark {
-  --background: oklch(0.17 0.02 260);
-  --foreground: oklch(0.95 0.01 260);
-
-  --card: oklch(0.22 0.02 260);
-  --card-foreground: oklch(0.95 0.01 260);
-
-  --primary: oklch(0.70 0.15 275);
-  --primary-foreground: oklch(0.17 0.02 260);
-
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.70 0.10 275);
+body {
+  background-color: var(--white-soft);
+  color: var(--text-dark);
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* ================= BASE LAYER ================= */
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-
-  html {
-    font-family: var(--font-sans);
-  }
-
-  body {
-    @apply text-foreground;
-    min-height: 100vh;
-
-    /* SaaS soft gradient background */
-    background: radial-gradient(
-        circle at 20% 20%,
-        rgba(99, 102, 241, 0.08),
-        transparent 40%
-      ),
-      radial-gradient(
-        circle at 80% 0%,
-        rgba(139, 92, 246, 0.08),
-        transparent 35%
-      ),
-      radial-gradient(
-        circle at 50% 100%,
-        rgba(99, 102, 241, 0.06),
-        transparent 40%
-      ),
-      oklch(0.98 0.01 260);
-  }
+/* ------------------ NAVBAR ------------------ */
+.navbar {
+  background-color: var(--indigo-deep);
+  color: white;
 }
 
-/* ================= GLOBAL CARD STYLE ================= */
-.card-ui {
-  @apply bg-card text-card-foreground rounded-2xl shadow-md border p-6;
+/* ------------------ CARDS ------------------ */
+.card {
+  background-color: white;
+  color: var(--text-dark);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+  padding: 20px;
 }
 
-/* ================= GLOBAL BUTTON STYLE ================= */
-.button-ui {
-  @apply rounded-xl px-5 py-2.5 font-medium transition-all duration-200;
+/* ------------------ PRIMARY BUTTON ------------------ */
+.btn-primary {
+  background-color: var(--indigo-deep);
+  color: white;
+  border-radius: 10px;
+  padding: 10px 16px;
+  transition: all 0.2s ease;
 }
 
-.button-ui-primary {
-  @apply button-ui bg-primary text-primary-foreground hover:opacity-90;
+.btn-primary:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
 }
 
-/* ================= FORM INPUT STYLE ================= */
-.input-ui {
-  @apply w-full rounded-xl border border-input bg-white px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-ring;
+/* ------------------ ACCENT BUTTON (Teal) ------------------ */
+.btn-teal {
+  background-color: var(--teal);
+  color: white;
+  border-radius: 10px;
+  padding: 10px 16px;
 }
 
-/* ================= PAGE CONTAINER ================= */
+.btn-teal:hover {
+  opacity: 0.9;
+}
+
+/* ------------------ ALERT / ACTION BUTTON (Coral Red) ------------------ */
+.btn-coral {
+  background-color: var(--coral-red);
+  color: white;
+  border-radius: 10px;
+  padding: 10px 16px;
+}
+
+.btn-coral:hover {
+  opacity: 0.9;
+}
+
+/* ------------------ INPUTS ------------------ */
+.input-field {
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: white;
+  color: var(--text-dark);
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.input-field:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(3, 179, 197, 0.25);
+}
+
+/* ------------------ BADGES ------------------ */
+.badge-teal {
+  background-color: rgba(3, 179, 197, 0.15);
+  color: #035e66;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.badge-mustard {
+  background-color: rgba(241, 182, 44, 0.2);
+  color: #7a5400;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.badge-beige {
+  background-color: var(--beige);
+  color: #5c4a2d;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* ------------------ SECTION BACKGROUNDS ------------------ */
+.section-beige {
+  background-color: var(--beige);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.section-light {
+  background-color: #fafafa;
+  border-radius: 16px;
+  padding: 24px;
+}
+
+/* ------------------ SCROLLBAR ------------------ */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f3f4f6;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--indigo-deep);
+  border-radius: 10px;
+}
+
+/* ------------------ PAGE CONTAINER ------------------ */
 .page-container {
-  @apply max-w-6xl mx-auto px-6 py-10;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
 }

@@ -16,57 +16,95 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     try {
       await login(email, password);
-      navigate("/home");
+      navigate("/");
     } catch (err: any) {
       alert(err?.response?.data?.message || "Login failed");
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black text-white">
-      <Card className="w-[400px] p-6 bg-neutral-900 border border-neutral-800">
-        <CardContent>
-          <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+    <div className="min-h-screen flex">
+      {/* LEFT SIDE BRAND PANEL */}
+      <div className="hidden md:flex w-1/2 relative items-center justify-center overflow-hidden bg-[var(--indigo-deep)] text-white">
+        {/* Animated blobs */}
+        <div className="absolute w-72 h-72 bg-[var(--teal)] opacity-30 rounded-full blur-3xl animate-pulse top-10 left-10" />
+        <div className="absolute w-72 h-72 bg-[var(--coral-red)] opacity-30 rounded-full blur-3xl animate-pulse bottom-10 right-10" />
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
+        <div className="z-10 text-center px-10">
+          <h1 className="text-5xl font-bold mb-6 tracking-wide">
+            InterviewAI
+          </h1>
+          <p className="text-lg text-gray-200 leading-relaxed">
+            Prepare smarter. <br />
+            Analyze your resume. <br />
+            Crack your next interview with AI.
+          </p>
+        </div>
+      </div>
+
+      {/* RIGHT SIDE LOGIN FORM */}
+      <div className="flex w-full md:w-1/2 items-center justify-center bg-[var(--white-soft)] px-6">
+        <Card className="w-full max-w-md backdrop-blur-xl bg-white/80 shadow-2xl border border-gray-200">
+          <CardContent className="p-8">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold text-[var(--indigo-deep)]">
+                Welcome Back 👋
+              </h2>
+              <p className="text-[var(--text-soft)] mt-2">
+                Login to continue your interview preparation
+              </p>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="h-11 focus:ring-2 focus:ring-[var(--teal)]"
+                />
+              </div>
 
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Logging in..." : "Login"}
-            </Button>
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="h-11 focus:ring-2 focus:ring-[var(--teal)]"
+                />
+              </div>
 
-            <p className="text-sm mt-4 text-center">
-              Don’t have an account?{" "}
-              <Link to="/register" className="text-blue-400 underline">
-                Register
-              </Link>
-            </p>
-          </form>
-        </CardContent>
-      </Card>
+              <Button
+                type="submit"
+                className="w-full h-11 text-base font-semibold bg-[var(--indigo-deep)] hover:opacity-90"
+                disabled={loading}
+              >
+                {loading ? "Logging in..." : "Login"}
+              </Button>
+
+              <p className="text-sm text-center text-[var(--text-soft)] mt-4">
+                Don’t have an account?{" "}
+                <Link
+                  to="/register"
+                  className="text-[var(--coral-red)] font-semibold hover:underline"
+                >
+                  Register
+                </Link>
+              </p>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
