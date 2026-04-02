@@ -1,7 +1,9 @@
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const User = require("../models/User.model");
-const BlacklistToken = require("../models/BlacklistToken.model");
+// src/controllers/auth.controller.js
+
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import User from "../models/User.model.js";
+import BlacklistToken from "../models/BlacklistToken.model.js";
 
 /**
  * Helper to set auth cookie correctly
@@ -12,9 +14,9 @@ const setAuthCookie = (res, token) => {
 
   res.cookie("token", token, {
     httpOnly: true,
-    secure: isProduction,         // true on HTTPS in production
+    secure: isProduction,                 // true on HTTPS in production
     sameSite: isProduction ? "none" : "lax", // cross-site in prod
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    maxAge: 7 * 24 * 60 * 60 * 1000,     // 7 days
   });
 };
 
@@ -124,8 +126,4 @@ const logoutUser = async (req, res) => {
   }
 };
 
-module.exports = {
-  registerUser,
-  loginUser,
-  logoutUser,
-};
+export { registerUser, loginUser, logoutUser };

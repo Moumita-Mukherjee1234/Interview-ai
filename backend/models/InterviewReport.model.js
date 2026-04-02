@@ -1,9 +1,11 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-const interviewReportSchema = new mongoose.Schema(
+const { Schema, model } = mongoose;
+
+const interviewReportSchema = new Schema(
   {
     userId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
@@ -40,8 +42,10 @@ const interviewReportSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: true, // createdAt + updatedAt auto
+    timestamps: true,
   }
 );
 
-module.exports = mongoose.model("InterviewReport", interviewReportSchema);
+const InterviewReport = model("InterviewReport", interviewReportSchema);
+
+export default InterviewReport;

@@ -1,18 +1,18 @@
-const { GoogleGenAI } = require("@google/genai");
-const { interviewSchema } = require("../schemas/interview.schema");
+import { GoogleGenAI } from "@google/genai";
+import { interviewSchema } from "../schemas/interview.schema.js";
 
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY,
-});
-
-const generateInterviewReport = async ({
+export const generateInterviewReport = async ({
   resumeText,
   jobDescription,
   selfDescription,
 }) => {
   try {
+    const ai = new GoogleGenAI({
+      apiKey: process.env.GEMINI_API_KEY,
+    });
+
     const prompt = `
-You are an AI Interview Coach.
+You are an expert AI Interview Coach and Resume Writer.
 
 STRICT RULES:
 - Return ONLY valid JSON
@@ -20,14 +20,28 @@ STRICT RULES:
 - No markdown
 - No extra text
 
-Format:
+JSON FORMAT:
 {
   "technicalQuestions": ["string"],
   "behavioralQuestions": ["string"],
   "skillGaps": ["string"],
   "preparationPlan": ["string"],
-  "matchScore": number
+  "matchScore": number,
+
+  "name": "string",
+  "email": "string",
+  "phone": "string",
+  "summary": "string",
+  "skills": ["string"],
+  "projects": [
+    { "title": "string", "description": "string" }
+  ],
+  "education": "string",
+
+  "coverLetter": "string"
 }
+
+Use the data below to intelligently create everything.
 
 Resume:
 ${resumeText}
@@ -44,36 +58,23 @@ ${selfDescription}
       contents: prompt,
     });
 
-    // ✅ SAFE TEXT EXTRACTION (VERY IMPORTANT)
-    let text = "";
+    let text =
+      response.text ??
+      response.candidates?.[0]?.content?.parts?.[0]?.text;
 
-    if (response.text) {
-      text = response.text;
-    } else if (response.candidates?.[0]?.content?.parts?.[0]?.text) {
-      text = response.candidates[0].content.parts[0].text;
-    } else {
-      throw new Error("No text returned from AI");
-    }
+    if (!text) throw new Error("No text returned from AI");
 
-    // ✅ ENSURE STRING
-    text = String(text);
+    // Remove markdown if Gemini adds it
+    text = String(text).replace(/```json|```/g, "").trim();
 
-    // ✅ CLEAN RESPONSE (FIXED)
-    text = text.replace(/```json|```/g, "").trim();
-
-    // ✅ PARSE JSON
     const parsed = JSON.parse(text);
 
-    // ✅ VALIDATE WITH ZOD
+    // ✅ Zod validation (very important)
     const validated = interviewSchema.parse(parsed);
 
     return validated;
-
   } catch (error) {
-    console.error("AI Error:", error.message);
+    console.error("AI Service Error:", error.message);
     throw new Error("AI response validation failed");
   }
 };
-
-module.exports = { generateInterviewReport };
-

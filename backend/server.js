@@ -1,34 +1,26 @@
-require("dotenv").config();
+import dotenv from "dotenv";
+dotenv.config();
 
-const http = require("http");
-const app = require("./src/app");
-const connectDB = require("./config/database");
+import http from "http";
+import app from "./src/app.js";
+import connectDB from "./config/database.js";
 
 const PORT = process.env.PORT || 5000;
 
-/**
- * Start server ONLY after DB connects
- */
+let server;
+
 const startServer = async () => {
   try {
-    // 1️⃣ Connect to MongoDB
+    // ✅ Connect DB first
     await connectDB();
     console.log("✅ MongoDB connected successfully");
 
-    // 2️⃣ Create HTTP server
-    const server = http.createServer(app);
+    // ✅ Create HTTP server
+    server = http.createServer(app);
 
-    // 3️⃣ Start listening
     server.listen(PORT, () => {
       console.log(`🚀 Server running at http://localhost:${PORT}`);
     });
-
-    // 4️⃣ Handle unhandled promise rejections
-    process.on("unhandledRejection", (err) => {
-      console.error("❌ Unhandled Rejection:", err.message);
-      server.close(() => process.exit(1));
-    });
-
   } catch (error) {
     console.error("❌ Server failed to start:", error.message);
     process.exit(1);
@@ -36,3 +28,34 @@ const startServer = async () => {
 };
 
 startServer();
+
+/*
+========================================
+Global Error Handlers (VERY IMPORTANT)
+========================================
+*/
+
+// Unhandled Promise Rejections
+process.on("unhandledRejection", (err) => {
+  console.error("❌ Unhandled Rejection:", err.message);
+  if (server) {
+    server.close(() => process.exit(1));
+  }
+});
+
+// Uncaught Exceptions
+process.on("uncaughtException", (err) => {
+  console.error("❌ Uncaught Exception:", err.message);
+  process.exit(1);
+});
+
+// Graceful shutdown (Ctrl + C)
+process.on("SIGINT", () => {
+  console.log("\n🛑 Shutting down server...");
+  if (server) {
+    server.close(() => {
+      console.log("✅ Server closed");
+      process.exit(0);
+    });
+  }
+});

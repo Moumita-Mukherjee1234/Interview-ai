@@ -1,4 +1,8 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
 
 /* ------------------ COLOR PALETTE ------------------ */
 :root {
@@ -17,6 +21,8 @@
 /* ------------------ GLOBAL RESET ------------------ */
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
@@ -32,6 +38,10 @@ body {
 .navbar {
   background-color: var(--indigo-deep);
   color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 /* ------------------ CARDS ------------------ */
@@ -42,6 +52,12 @@ body {
   border-radius: 16px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
   padding: 20px;
+  transition: all 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
 }
 
 /* ------------------ PRIMARY BUTTON ------------------ */
@@ -50,6 +66,7 @@ body {
   color: white;
   border-radius: 10px;
   padding: 10px 16px;
+  font-weight: 600;
   transition: all 0.2s ease;
 }
 
@@ -64,10 +81,13 @@ body {
   color: white;
   border-radius: 10px;
   padding: 10px 16px;
+  font-weight: 600;
+  transition: all 0.2s ease;
 }
 
 .btn-teal:hover {
   opacity: 0.9;
+  transform: translateY(-1px);
 }
 
 /* ------------------ ALERT / ACTION BUTTON (Coral Red) ------------------ */
@@ -76,10 +96,13 @@ body {
   color: white;
   border-radius: 10px;
   padding: 10px 16px;
+  font-weight: 600;
+  transition: all 0.2s ease;
 }
 
 .btn-coral:hover {
   opacity: 0.9;
+  transform: translateY(-1px);
 }
 
 /* ------------------ INPUTS ------------------ */
@@ -158,4 +181,22 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   padding: 24px;
+}
+
+/* ------------------ FOR TEXTAREAS ------------------ */
+textarea {
+  resize: vertical;
+  min-height: 80px;
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+/* ------------------ UTILITY ------------------ */
+.transition-all {
+  transition: all 0.2s ease-in-out;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }

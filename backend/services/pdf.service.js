@@ -1,18 +1,30 @@
-const puppeteer = require("puppeteer");
+import puppeteer from "puppeteer";
 
-const generatePDF = async (html) => {
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-
-  await page.setContent(html, { waitUntil: "domcontentloaded" });
-
-  const pdfBuffer = await page.pdf({
-    format: "A4",
-    printBackground: true,
+export const generatePDF = async (html) => {
+  const browser = await puppeteer.launch({
+    headless: "new",
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage",
+      "--disable-gpu",
+    ],
   });
 
-  await browser.close();
-  return pdfBuffer;
-};
+  try {
+    const page = await browser.newPage();
 
-module.exports = { generatePDF };
+    await page.setContent(html, {
+      waitUntil: "networkidle0",
+    });
+
+    const pdfBuffer = await page.pdf({
+      format: "A4",
+      printBackground: true,
+    });
+
+    return pdfBuffer;
+  } finally {
+    await browser.close();
+  }
+};

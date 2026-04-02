@@ -1,113 +1,73 @@
-const express = require("express");
+import express from "express";
+import pdfParse from "pdf-parse";
+
+import upload from "../middleware/upload.middleware.js";
+import authMiddleware from "../middleware/auth.middleware.js";
+
+import {
+  createInterviewReport,
+  getReports,
+  downloadResumePDF,
+  downloadCoverLetterPDF,
+} from "../controllers/interview.controller.js";
+
 const router = express.Router();
 
-const upload = require("../middleware/upload.middleware");
-const authMiddleware = require("../middleware/auth.middleware");
-const pdfParse = require("pdf-parse");
-
-const { generateInterviewReport } = require("../services/ai.service");
-const { resumeTemplate } = require("../src/templates/resumeTemplate");
-const { generatePDF } = require("../services/pdf.service");
-
-const InterviewReport = require("../models/InterviewReport.model");
-
-
-// ✅ POST /api/interview
-// Upload resume → Parse PDF → AI → Save report
+/*
+POST /api/interview/generate
+Upload resume → extract text → controller handles AI + DB
+*/
 router.post(
-  "/",
+  "/generate",
   authMiddleware,
-  upload.single("resume"),
-  async (req, res) => {
+  upload.single("resume"), // multer handles file
+  async (req, res, next) => {
     try {
       const { jobDescription, selfDescription } = req.body;
 
+      // ❗ Important safety check
       if (!req.file) {
-        return res.status(400).json({ message: "No resume file uploaded" });
+        return res.status(400).json({ message: "No resume uploaded" });
       }
 
-      // Convert PDF → text
+      // ✅ Parse PDF directly from memory (NO fs, NO path)
       const pdfData = await pdfParse(req.file.buffer);
       const resumeText = pdfData.text;
 
       if (!resumeText || resumeText.trim().length < 50) {
-        return res.status(400).json({
-          message: "Unable to extract enough text from resume",
-        });
+        return res
+          .status(400)
+          .json({ message: "Unable to extract text from resume" });
       }
 
-      // Call AI
-      const aiReport = await generateInterviewReport({
+      // Pass processed data to controller
+      req.body = {
         resumeText,
         jobDescription,
         selfDescription,
-      });
+      };
 
-      // Save to DB
-      const savedReport = await InterviewReport.create({
-        userId: req.user._id,
-        technicalQuestions: aiReport.technicalQuestions,
-        behavioralQuestions: aiReport.behavioralQuestions,
-        skillGaps: aiReport.skillGaps,
-        preparationPlan: aiReport.preparationPlan,
-        matchScore: aiReport.matchScore,
-      });
-
-      return res.status(201).json({
-        message: "Interview report generated successfully",
-        report: savedReport,
-      });
+      next();
     } catch (error) {
-      console.error("Interview Route Error:", error);
-      return res.status(500).json({
-        message: "Server error while generating interview report",
-        error: error.message,
-      });
+      next(error);
     }
-  }
+  },
+  createInterviewReport
 );
 
+/*
+GET /api/interview/history
+*/
+router.get("/history", authMiddleware, getReports);
 
-// ✅ GET /api/interview
-// Fetch previous reports of logged-in user
-router.get("/", authMiddleware, async (req, res) => {
-  try {
-    const reports = await InterviewReport.find({
-      userId: req.user._id,
-    }).sort({ createdAt: -1 });
+/*
+POST /api/interview/resume-pdf
+*/
+router.post("/resume-pdf", authMiddleware, downloadResumePDF);
 
-    return res.status(200).json(reports);
-  } catch (error) {
-    return res.status(500).json({
-      message: "Failed to fetch reports",
-      error: error.message,
-    });
-  }
-});
+/*
+POST /api/interview/cover-letter-pdf
+*/
+router.post("/cover-letter-pdf", authMiddleware, downloadCoverLetterPDF);
 
-
-// ✅ POST /api/interview/resume
-// AI Resume JSON → HTML → PDF
-router.post("/resume", authMiddleware, async (req, res) => {
-  try {
-    const resumeData = req.body;
-
-    const html = resumeTemplate(resumeData);
-    const pdfBuffer = await generatePDF(html);
-
-    res.set({
-      "Content-Type": "application/pdf",
-      "Content-Disposition": "attachment; filename=AI-Resume.pdf",
-    });
-
-    return res.send(pdfBuffer);
-  } catch (error) {
-    return res.status(500).json({
-      message: "Failed to generate resume PDF",
-      error: error.message,
-    });
-  }
-});
-
-
-module.exports = router;
+export default router;

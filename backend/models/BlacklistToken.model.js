@@ -1,4 +1,5 @@
-const mongoose = require("mongoose");
+// src/models/blacklistToken.js
+import mongoose from "mongoose";
 
 const blacklistTokenSchema = new mongoose.Schema(
   {
@@ -8,8 +9,10 @@ const blacklistTokenSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: true, // createdAt auto
+    timestamps: true, // automatically adds createdAt and updatedAt
   }
 );
 
-module.exports = mongoose.model("BlacklistToken", blacklistTokenSchema);
+const BlacklistToken = mongoose.model("BlacklistToken", blacklistTokenSchema);
+
+export default BlacklistToken;

@@ -1,6 +1,8 @@
-const jwt = require("jsonwebtoken");
-const User = require("../models/User.model");
-const BlacklistToken = require("../models/BlacklistToken.model");
+// src/middleware/authMiddleware.js
+
+import jwt from "jsonwebtoken";
+import User from "../models/User.model.js";
+import BlacklistToken from "../models/BlacklistToken.model.js";
 
 const authMiddleware = async (req, res, next) => {
   try {
@@ -36,4 +38,4 @@ const authMiddleware = async (req, res, next) => {
   }
 };
 
-module.exports = authMiddleware;
+export default authMiddleware;

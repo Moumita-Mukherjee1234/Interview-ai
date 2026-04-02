@@ -1,4 +1,4 @@
-export const resumeTemplate = ({ resumeContent, name }) => {
+export const coverLetterTemplate = ({ coverLetter, name }) => {
   return `
     <html>
       <head>
@@ -9,8 +9,8 @@ export const resumeTemplate = ({ resumeContent, name }) => {
         </style>
       </head>
       <body>
-        <h1>${name || "Resume"}</h1>
-        <pre>${resumeContent}</pre>
+        <h1>Cover Letter - ${name || ""}</h1>
+        <pre>${coverLetter}</pre>
       </body>
     </html>
   `;
